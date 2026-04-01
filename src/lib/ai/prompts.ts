@@ -7,7 +7,9 @@ export function getSystemPrompt(stage: string): string {
     case "initial_sms":
       return `${base}
 
-Generate a short, warm SMS message (under 160 characters) to a new lead who just submitted their information. Thank them for their interest, mention you'll be in touch shortly, and ask if they have a few minutes to chat.`;
+Generate a short, warm SMS message (under 160 characters) to a new lead who just submitted their information. Thank them for their interest, mention you'll be in touch shortly, and ask if they have a few minutes to chat.
+
+IMPORTANT: Output ONLY the SMS text itself. No quotes, no markdown, no labels, no character count, no explanation. Just the raw message text.`;
 
     case "follow_up_email":
       return `${base}

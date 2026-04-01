@@ -10,7 +10,8 @@ import type { Lead } from "@/lib/types/lead";
 import type { StepResult } from "@/lib/types/pipeline";
 
 export async function sendInitialSms(lead: Lead): Promise<StepResult> {
-  const message = await generateResponse(lead, "initial_sms");
+  // Keep SMS short — Twilio trial prepends its own prefix
+  const message = `Hi ${lead.firstName}! Thanks for your interest. We'll be in touch shortly.`;
   const phone = formatE164(lead.phone);
   const { sid } = await sendSms(phone, message);
   await updateLead(lead.id, { status: "contacted_sms" });
