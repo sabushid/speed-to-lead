@@ -1,14 +1,14 @@
 import { sendSms, initiateCallWithTwiml } from "@/lib/services/twilio";
 import { sendEmail } from "@/lib/services/gmail";
-import { generateResponse } from "@/lib/ai/response-generator";
 import { updateLead } from "@/lib/services/google-sheets";
 import { formatE164 } from "@/lib/utils/phone";
+import { env } from "@/lib/config/env";
 import type { Lead } from "@/lib/types/lead";
 import type { StepResult } from "@/lib/types/pipeline";
 
 export async function sendInitialSms(lead: Lead): Promise<StepResult> {
-  // Keep SMS short — Twilio trial prepends its own prefix
-  const message = `Hi ${lead.firstName}! Thanks for your interest. We'll be in touch shortly.`;
+  const bookingUrl = `${env.APP_URL()}/book/${lead.id}`;
+  const message = `Hi ${lead.firstName}! Thanks for reaching out. Book your appointment here: ${bookingUrl}`;
   const phone = formatE164(lead.phone);
   const { sid } = await sendSms(phone, message);
   await updateLead(lead.id, { status: "contacted_sms" });
@@ -25,10 +25,22 @@ export async function initiateVoiceCall(lead: Lead): Promise<StepResult> {
 }
 
 export async function sendFollowUpEmail(lead: Lead): Promise<StepResult> {
-  const html = await generateResponse(lead, "follow_up_email");
+  const bookingUrl = `${env.APP_URL()}/book/${lead.id}`;
+  const html = `
+    <p>Hi ${lead.firstName},</p>
+    <p>Thanks so much for reaching out to us! We received your message and we're excited to connect with you.</p>
+    <p>We'd love to set up a time to chat and learn more about how we can help. You can book an appointment at a time that works best for you:</p>
+    <p style="margin: 24px 0;">
+      <a href="${bookingUrl}" style="background-color: #2563eb; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold;">
+        Book Your Appointment
+      </a>
+    </p>
+    <p>Looking forward to speaking with you!</p>
+    <p>Best regards,<br>The Team</p>
+  `;
   const { messageId } = await sendEmail(
     lead.email,
-    `Thanks for reaching out, ${lead.firstName}!`,
+    `${lead.firstName}, book your appointment with us!`,
     html
   );
   await updateLead(lead.id, { status: "contacted_email" });
