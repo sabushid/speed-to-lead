@@ -7,7 +7,7 @@ import type { Lead } from "@/lib/types/lead";
 import type { StepResult } from "@/lib/types/pipeline";
 
 export async function sendInitialSms(lead: Lead): Promise<StepResult> {
-  const bookingUrl = `${env.APP_URL()}/book/${lead.id}`;
+  const bookingUrl = `${env.APP_URL()}/book`;
   const message = `Hi ${lead.firstName}! Thanks for reaching out. Book your appointment here: ${bookingUrl}`;
   const phone = formatE164(lead.phone);
   const { sid } = await sendSms(phone, message);
@@ -25,7 +25,7 @@ export async function initiateVoiceCall(lead: Lead): Promise<StepResult> {
 }
 
 export async function sendFollowUpEmail(lead: Lead): Promise<StepResult> {
-  const bookingUrl = `${env.APP_URL()}/book/${lead.id}`;
+  const bookingUrl = `${env.APP_URL()}/book`;
   const html = `
     <p>Hi ${lead.firstName},</p>
     <p>Thanks so much for reaching out to us! We received your message and we're excited to connect with you.</p>
