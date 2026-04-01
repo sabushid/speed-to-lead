@@ -13,8 +13,8 @@ import type { PipelineStep, PipelineResult, StepResult } from "@/lib/types/pipel
 
 const PIPELINE_STEPS: PipelineStep[] = [
   { name: "sms_response", execute: sendInitialSms },
-  { name: "voice_call", execute: initiateVoiceCall, delayMs: 30_000 },
-  { name: "email_followup", execute: sendFollowUpEmail, delayMs: 60_000 },
+  { name: "voice_call", execute: initiateVoiceCall },
+  { name: "email_followup", execute: sendFollowUpEmail },
   { name: "crm_update", execute: updateCrmRecord },
 ];
 

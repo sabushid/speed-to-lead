@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
+import { after } from "next/server";
 import { v4 as uuid } from "uuid";
 import { createLeadSchema } from "@/lib/validators/lead";
 import { appendLead, getLeads, initializeSheet } from "@/lib/services/google-sheets";
 import { runPipeline } from "@/lib/pipeline/orchestrator";
 import { logger } from "@/lib/utils/logger";
 import type { Lead } from "@/lib/types/lead";
+
+export const maxDuration = 60;
 
 export async function POST(request: NextRequest) {
   try {
@@ -42,9 +45,13 @@ export async function POST(request: NextRequest) {
 
     logger.info({ leadId: lead.id }, "New lead created");
 
-    // Run pipeline in background (fire-and-forget)
-    runPipeline(lead).catch((error) => {
-      logger.error({ leadId: lead.id, error: String(error) }, "Pipeline failed");
+    // Run pipeline after response is sent (keeps serverless function alive)
+    after(async () => {
+      try {
+        await runPipeline(lead);
+      } catch (error) {
+        logger.error({ leadId: lead.id, error: String(error) }, "Pipeline failed");
+      }
     });
 
     return NextResponse.json(
