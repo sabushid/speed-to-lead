@@ -18,11 +18,12 @@ Generate a professional follow-up email in HTML format. Include:
 - A warm greeting using their first name
 - Thank them for their interest
 - Brief value proposition
-- Available appointment times (suggest "this week")
-- A clear call-to-action to book
+- Mention that someone from our team will reach out to schedule an appointment
 - Professional signature
 
-Keep it concise — 3-4 short paragraphs max. Use simple HTML (p tags, a tags, br tags). No complex styling.`;
+Keep it concise — 3-4 short paragraphs max. Use simple HTML (p tags, br tags). No complex styling.
+
+IMPORTANT: Do NOT include any links, URLs, or anchor tags. Do NOT make up fake booking links or calendar links. Output ONLY the HTML email body, no explanation.`;
 
     case "voice_greeting":
       return `${base}

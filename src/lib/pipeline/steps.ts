@@ -1,11 +1,8 @@
-import { sendSms } from "@/lib/services/twilio";
-import { createVoiceAgentRoom, dispatchAgent } from "@/lib/services/livekit";
-import { initiateCall } from "@/lib/services/twilio";
+import { sendSms, initiateCallWithTwiml } from "@/lib/services/twilio";
 import { sendEmail } from "@/lib/services/gmail";
 import { generateResponse } from "@/lib/ai/response-generator";
 import { updateLead } from "@/lib/services/google-sheets";
 import { formatE164 } from "@/lib/utils/phone";
-import { env } from "@/lib/config/env";
 import type { Lead } from "@/lib/types/lead";
 import type { StepResult } from "@/lib/types/pipeline";
 
@@ -19,15 +16,12 @@ export async function sendInitialSms(lead: Lead): Promise<StepResult> {
 }
 
 export async function initiateVoiceCall(lead: Lead): Promise<StepResult> {
-  const { roomName } = await createVoiceAgentRoom(lead.id);
-  await dispatchAgent(roomName, lead);
-
+  const greeting = `Hi ${lead.firstName}, this is a quick call from our team. Thanks for reaching out to us! We'd love to help you. One of our team members will follow up with you shortly to schedule a time to chat. Have a great day!`;
   const phone = formatE164(lead.phone);
-  const twimlUrl = `${env.APP_URL()}/api/webhooks/twilio?room=${encodeURIComponent(roomName)}`;
-  const { sid } = await initiateCall(phone, twimlUrl);
+  const { sid } = await initiateCallWithTwiml(phone, greeting);
 
   await updateLead(lead.id, { status: "contacted_voice" });
-  return { success: true, detail: `Call initiated (SID: ${sid}, Room: ${roomName})` };
+  return { success: true, detail: `Call initiated (SID: ${sid})` };
 }
 
 export async function sendFollowUpEmail(lead: Lead): Promise<StepResult> {

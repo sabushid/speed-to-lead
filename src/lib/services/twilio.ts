@@ -45,6 +45,24 @@ export async function initiateCall(
   return { sid: call.sid, status: call.status };
 }
 
+export async function initiateCallWithTwiml(
+  to: string,
+  message: string
+): Promise<CallResult> {
+  const twilio = getClient();
+  logger.info({ to }, "Initiating call with inline TwiML");
+
+  const twiml = generateTwiml(message);
+  const call = await twilio.calls.create({
+    to,
+    from: env.TWILIO_PHONE_NUMBER(),
+    twiml,
+  });
+
+  logger.info({ sid: call.sid, status: call.status }, "Call initiated");
+  return { sid: call.sid, status: call.status };
+}
+
 export function generateTwiml(message: string): string {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
