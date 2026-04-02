@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { MessageSquare, Phone, Mail, Clock, Zap, Calendar } from "lucide-react";
 import LeadForm from "@/components/lead-form";
@@ -10,9 +11,14 @@ export default function LandingPage() {
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-brand-dark/95 backdrop-blur-[20px]">
         <div className="max-w-[1140px] mx-auto px-6 py-4 flex items-center justify-between">
-          <span className="font-[family-name:var(--font-heading)] text-xl font-bold text-white tracking-tight">
-            SpeedToLead
-          </span>
+          <Image
+            src="/images/logo.png"
+            alt="Rushanet"
+            width={140}
+            height={40}
+            className="brightness-0 invert"
+            priority
+          />
           <a
             href="/dashboard"
             className="text-sm text-white/70 hover:text-white transition-all duration-200 px-4 py-2 rounded-full hover:bg-white/10"

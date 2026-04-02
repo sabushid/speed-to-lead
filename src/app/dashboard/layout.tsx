@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -6,8 +7,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <header className="bg-brand-dark/95 backdrop-blur-[20px] border-b border-white/10">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <Link href="/" className="font-[family-name:var(--font-heading)] text-xl font-bold text-white">
-              SpeedToLead
+            <Link href="/">
+              <Image src="/images/logo.png" alt="Rushanet" width={120} height={36} className="brightness-0 invert" />
             </Link>
             <Link
               href="/dashboard"
