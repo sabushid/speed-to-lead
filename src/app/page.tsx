@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { MessageSquare, Phone, Mail, Zap, Calendar } from "lucide-react";
 import LeadForm from "@/components/lead-form";
 
 export default function LandingPage() {
@@ -61,9 +60,17 @@ export default function LandingPage() {
 
               {/* Stats */}
               <div className="grid grid-cols-3 gap-4">
-                <StatCard icon="sms" value="<5s" label="SMS Response" delay="0.1s" />
-                <StatCard icon="phone" value="30s" label="AI Voice Call" delay="0.2s" />
-                <StatCard icon="mail" value="60s" label="Email Follow-up" delay="0.3s" />
+                {[
+                  { svg: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>', value: "<5s", label: "SMS Response", delay: "0.1s" },
+                  { svg: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>', value: "30s", label: "AI Voice Call", delay: "0.2s" },
+                  { svg: '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>', value: "60s", label: "Email Follow-up", delay: "0.3s" },
+                ].map((stat) => (
+                  <div key={stat.label} className="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-sm text-center animate-fadeUp" style={{ animationDelay: stat.delay }}>
+                    <svg className="w-5 h-5 text-brand-light mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" dangerouslySetInnerHTML={{ __html: stat.svg }} />
+                    <div className="text-2xl font-extrabold text-brand-light font-[family-name:var(--font-heading)]">{stat.value}</div>
+                    <div className="text-xs text-white/50 mt-1">{stat.label}</div>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -102,10 +109,10 @@ export default function LandingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { Icon: Zap, step: "01", title: "Lead Captured", desc: "Form submitted on your landing page or ad" },
-              { Icon: MessageSquare, step: "02", title: "Instant SMS", desc: "AI sends a personalized text with booking link" },
-              { Icon: Phone, step: "03", title: "AI Voice Call", desc: "Automated call greets them by name" },
-              { Icon: Calendar, step: "04", title: "Appointment Booked", desc: "Lead books directly on your calendar" },
+              { svg: '<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>', step: "01", title: "Lead Captured", desc: "Form submitted on your landing page or ad" },
+              { svg: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>', step: "02", title: "Instant SMS", desc: "AI sends a personalized text with booking link" },
+              { svg: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>', step: "03", title: "AI Voice Call", desc: "Automated call greets them by name" },
+              { svg: '<rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/>', step: "04", title: "Appointment Booked", desc: "Lead books directly on your calendar" },
             ].map((item) => (
               <div
                 key={item.step}
@@ -113,7 +120,7 @@ export default function LandingPage() {
                 style={{ boxShadow: "0 4px 24px rgba(0,0,0,0.04)" }}
               >
                 <div className="w-14 h-14 rounded-2xl bg-brand-dark/6 flex items-center justify-center mb-5 group-hover:bg-brand-dark transition-all duration-300">
-                  <item.Icon className="w-6 h-6 text-brand-dark group-hover:text-white transition-colors duration-300" />
+                  <svg className="w-6 h-6 text-brand-dark group-hover:text-white transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" dangerouslySetInnerHTML={{ __html: item.svg }} />
                 </div>
                 <div className="text-xs font-semibold text-brand-light mb-2 font-[family-name:var(--font-heading)]">
                   STEP {item.step}
@@ -195,19 +202,3 @@ export default function LandingPage() {
   );
 }
 
-function StatCard({ icon, value, label, delay }: { icon: string; value: string; label: string; delay: string }) {
-  const icons: Record<string, typeof MessageSquare> = { sms: MessageSquare, phone: Phone, mail: Mail };
-  const Icon = icons[icon] ?? MessageSquare;
-  return (
-    <div
-      className="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-sm text-center animate-fadeUp"
-      style={{ animationDelay: delay }}
-    >
-      <Icon className="w-5 h-5 text-brand-light mx-auto mb-2" />
-      <div className="text-2xl font-extrabold text-brand-light font-[family-name:var(--font-heading)]">
-        {value}
-      </div>
-      <div className="text-xs text-white/50 mt-1">{label}</div>
-    </div>
-  );
-}

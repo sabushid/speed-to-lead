@@ -1,26 +1,25 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { createLeadSchema, type CreateLeadFormData } from "@/lib/validators/lead";
-import { CheckCircle, Loader2 } from "lucide-react";
+import { useState, type FormEvent } from "react";
 
 export default function LeadForm() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } = useForm<CreateLeadFormData>({ resolver: zodResolver(createLeadSchema) as any });
-
-  const onSubmit = async (data: CreateLeadFormData) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setSubmitting(true);
     setError(null);
+
+    const form = e.currentTarget;
+    const data = {
+      firstName: (form.elements.namedItem("firstName") as HTMLInputElement).value,
+      lastName: (form.elements.namedItem("lastName") as HTMLInputElement).value,
+      email: (form.elements.namedItem("email") as HTMLInputElement).value,
+      phone: (form.elements.namedItem("phone") as HTMLInputElement).value,
+      message: (form.elements.namedItem("message") as HTMLTextAreaElement).value || undefined,
+    };
 
     try {
       const res = await fetch("/api/leads", {
@@ -45,7 +44,9 @@ export default function LeadForm() {
   if (submitted) {
     return (
       <div className="rounded-2xl bg-green-50 border border-green-200 p-8 text-center">
-        <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-3" />
+        <svg className="w-12 h-12 text-green-500 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
         <h3 className="font-[family-name:var(--font-heading)] text-xl font-bold text-green-800 mb-2">
           We got your info!
         </h3>
@@ -57,43 +58,37 @@ export default function LeadForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={onSubmit} className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label htmlFor="firstName" className="block text-sm font-medium text-text-primary mb-1.5">
             First Name
           </label>
           <input
-            {...register("firstName")}
+            name="firstName"
             id="firstName"
             type="text"
-            className="w-full rounded-xl border border-brand-dark/10 bg-brand-offwhite px-4 py-3.5 text-text-primary placeholder-text-muted/50 focus:border-brand-medium focus:bg-white outline-none transition-all duration-200"
-            style={{ boxShadow: "none" }}
-            onFocus={(e) => { e.currentTarget.style.boxShadow = "0 0 0 3px rgba(128,77,211,0.15)"; }}
-            onBlur={(e) => { e.currentTarget.style.boxShadow = "none"; }}
+            required
+            minLength={1}
+            maxLength={100}
+            className="w-full rounded-xl border border-brand-dark/10 bg-brand-offwhite px-4 py-3.5 text-text-primary placeholder-text-muted/50 focus:border-brand-medium focus:bg-white outline-none transition-all duration-200 focus:shadow-[0_0_0_3px_rgba(128,77,211,0.15)]"
             placeholder="Jane"
           />
-          {errors.firstName && (
-            <p className="mt-1 text-sm text-red-500">{errors.firstName.message}</p>
-          )}
         </div>
         <div>
           <label htmlFor="lastName" className="block text-sm font-medium text-text-primary mb-1.5">
             Last Name
           </label>
           <input
-            {...register("lastName")}
+            name="lastName"
             id="lastName"
             type="text"
-            className="w-full rounded-xl border border-brand-dark/10 bg-brand-offwhite px-4 py-3.5 text-text-primary placeholder-text-muted/50 focus:border-brand-medium focus:bg-white outline-none transition-all duration-200"
-            style={{ boxShadow: "none" }}
-            onFocus={(e) => { e.currentTarget.style.boxShadow = "0 0 0 3px rgba(128,77,211,0.15)"; }}
-            onBlur={(e) => { e.currentTarget.style.boxShadow = "none"; }}
+            required
+            minLength={1}
+            maxLength={100}
+            className="w-full rounded-xl border border-brand-dark/10 bg-brand-offwhite px-4 py-3.5 text-text-primary placeholder-text-muted/50 focus:border-brand-medium focus:bg-white outline-none transition-all duration-200 focus:shadow-[0_0_0_3px_rgba(128,77,211,0.15)]"
             placeholder="Smith"
           />
-          {errors.lastName && (
-            <p className="mt-1 text-sm text-red-500">{errors.lastName.message}</p>
-          )}
         </div>
       </div>
 
@@ -102,18 +97,13 @@ export default function LeadForm() {
           Email
         </label>
         <input
-          {...register("email")}
+          name="email"
           id="email"
           type="email"
-          className="w-full rounded-xl border border-brand-dark/10 bg-brand-offwhite px-4 py-3.5 text-text-primary placeholder-text-muted/50 focus:border-brand-medium focus:bg-white outline-none transition-all duration-200"
-          style={{ boxShadow: "none" }}
-          onFocus={(e) => { e.currentTarget.style.boxShadow = "0 0 0 3px rgba(128,77,211,0.15)"; }}
-          onBlur={(e) => { e.currentTarget.style.boxShadow = "none"; }}
+          required
+          className="w-full rounded-xl border border-brand-dark/10 bg-brand-offwhite px-4 py-3.5 text-text-primary placeholder-text-muted/50 focus:border-brand-medium focus:bg-white outline-none transition-all duration-200 focus:shadow-[0_0_0_3px_rgba(128,77,211,0.15)]"
           placeholder="jane@example.com"
         />
-        {errors.email && (
-          <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
-        )}
       </div>
 
       <div>
@@ -121,18 +111,15 @@ export default function LeadForm() {
           Phone Number
         </label>
         <input
-          {...register("phone")}
+          name="phone"
           id="phone"
           type="tel"
-          className="w-full rounded-xl border border-brand-dark/10 bg-brand-offwhite px-4 py-3.5 text-text-primary placeholder-text-muted/50 focus:border-brand-medium focus:bg-white outline-none transition-all duration-200"
-          style={{ boxShadow: "none" }}
-          onFocus={(e) => { e.currentTarget.style.boxShadow = "0 0 0 3px rgba(128,77,211,0.15)"; }}
-          onBlur={(e) => { e.currentTarget.style.boxShadow = "none"; }}
+          required
+          pattern="\+?[1-9]\d{9,14}"
+          title="Enter a valid phone number (e.g. +15551234567)"
+          className="w-full rounded-xl border border-brand-dark/10 bg-brand-offwhite px-4 py-3.5 text-text-primary placeholder-text-muted/50 focus:border-brand-medium focus:bg-white outline-none transition-all duration-200 focus:shadow-[0_0_0_3px_rgba(128,77,211,0.15)]"
           placeholder="+1 (555) 123-4567"
         />
-        {errors.phone && (
-          <p className="mt-1 text-sm text-red-500">{errors.phone.message}</p>
-        )}
       </div>
 
       <div>
@@ -140,13 +127,11 @@ export default function LeadForm() {
           Message <span className="text-text-muted/60">(optional)</span>
         </label>
         <textarea
-          {...register("message")}
+          name="message"
           id="message"
           rows={3}
-          className="w-full rounded-xl border border-brand-dark/10 bg-brand-offwhite px-4 py-3.5 text-text-primary placeholder-text-muted/50 focus:border-brand-medium focus:bg-white outline-none transition-all duration-200 resize-none"
-          style={{ boxShadow: "none" }}
-          onFocus={(e) => { e.currentTarget.style.boxShadow = "0 0 0 3px rgba(128,77,211,0.15)"; }}
-          onBlur={(e) => { e.currentTarget.style.boxShadow = "none"; }}
+          maxLength={1000}
+          className="w-full rounded-xl border border-brand-dark/10 bg-brand-offwhite px-4 py-3.5 text-text-primary placeholder-text-muted/50 focus:border-brand-medium focus:bg-white outline-none transition-all duration-200 resize-none focus:shadow-[0_0_0_3px_rgba(128,77,211,0.15)]"
           placeholder="Tell us what you're looking for..."
         />
       </div>
@@ -167,14 +152,7 @@ export default function LeadForm() {
           minHeight: "52px",
         }}
       >
-        {submitting ? (
-          <>
-            <Loader2 className="w-5 h-5 animate-spin" />
-            Submitting...
-          </>
-        ) : (
-          "Get Started Now"
-        )}
+        {submitting ? "Submitting..." : "Get Started Now"}
       </button>
 
       <p className="text-xs text-text-muted text-center">
