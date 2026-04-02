@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { CheckCircle, Calendar, Loader2 } from "lucide-react";
 import type { TimeSlot } from "@/lib/types/services";
 
 export default function BookingPage() {
@@ -10,7 +12,6 @@ export default function BookingPage() {
   const [booked, setBooked] = useState<{ start: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Step 1: identify the lead
   const [email, setEmail] = useState("");
   const [leadId, setLeadId] = useState<string | null>(null);
   const [lookingUp, setLookingUp] = useState(false);
@@ -53,11 +54,7 @@ export default function BookingPage() {
       const res = await fetch("/api/calendar/book", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          leadId,
-          slotStart: slot.start,
-          slotEnd: slot.end,
-        }),
+        body: JSON.stringify({ leadId, slotStart: slot.start, slotEnd: slot.end }),
       });
       if (!res.ok) {
         const body = await res.json();
@@ -74,35 +71,48 @@ export default function BookingPage() {
   // Booked confirmation
   if (booked) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4 bg-gray-50">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl border border-gray-200 p-8 text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Appointment Confirmed!</h1>
-          <div className="bg-blue-50 rounded-lg p-4 mb-4">
-            <div className="text-lg font-semibold text-blue-700">
+      <div className="min-h-screen flex items-center justify-center px-4" style={{ background: "linear-gradient(170deg, #5400b1 0%, #3a0080 100%)" }}>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="max-w-md w-full bg-white rounded-[24px] p-10 text-center"
+          style={{ boxShadow: "0 32px 80px rgba(84,0,177,0.25)" }}
+        >
+          <CheckCircle className="w-14 h-14 text-green-500 mx-auto mb-4" />
+          <h1 className="font-[family-name:var(--font-heading)] text-2xl font-extrabold text-text-primary mb-4">
+            Appointment Confirmed!
+          </h1>
+          <div className="bg-brand-offwhite rounded-2xl p-5 mb-4">
+            <div className="text-lg font-bold text-brand-dark font-[family-name:var(--font-heading)]">
               {formatDateTime(booked.start)}
             </div>
-            <div className="text-sm text-blue-500">30 minutes</div>
+            <div className="text-sm text-text-muted mt-1">30 minutes</div>
           </div>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-text-muted">
             A confirmation has been sent to your email and phone.
           </p>
-        </div>
+        </motion.div>
       </div>
     );
   }
 
-  // Step 1: Email lookup
+  // Email lookup
   if (!leadId) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4 bg-gray-50">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl border border-gray-200 p-8">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2 text-center">Book Your Appointment</h1>
-          <p className="text-gray-500 text-center mb-6">Enter the email you used to get started</p>
+      <div className="min-h-screen flex items-center justify-center px-4" style={{ background: "linear-gradient(170deg, #5400b1 0%, #3a0080 100%)" }}>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-md w-full bg-white rounded-[24px] p-10"
+          style={{ boxShadow: "0 32px 80px rgba(84,0,177,0.25)" }}
+        >
+          <div className="text-center mb-6">
+            <Calendar className="w-12 h-12 text-brand-dark mx-auto mb-4" />
+            <h1 className="font-[family-name:var(--font-heading)] text-2xl font-extrabold text-text-primary mb-2">
+              Book Your Appointment
+            </h1>
+            <p className="text-text-muted text-sm">Enter the email you used to get started</p>
+          </div>
           <form onSubmit={handleLookup} className="space-y-4">
             <input
               type="email"
@@ -110,65 +120,81 @@ export default function BookingPage() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="your@email.com"
               required
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+              className="w-full rounded-xl border border-brand-dark/10 bg-brand-offwhite px-4 py-3.5 text-text-primary placeholder-text-muted/50 focus:border-brand-medium focus:bg-white outline-none transition-all duration-200"
+              style={{ boxShadow: "none" }}
+              onFocus={(e) => { e.currentTarget.style.boxShadow = "0 0 0 3px rgba(128,77,211,0.15)"; }}
+              onBlur={(e) => { e.currentTarget.style.boxShadow = "none"; }}
             />
-            {error && (
-              <div className="text-sm text-red-600">{error}</div>
-            )}
+            {error && <div className="text-sm text-red-500">{error}</div>}
             <button
               type="submit"
               disabled={lookingUp}
-              className="w-full rounded-lg bg-blue-600 px-6 py-3 text-white font-semibold hover:bg-blue-700 disabled:opacity-50 transition"
+              className="w-full rounded-full px-6 py-4 text-white font-bold transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] disabled:opacity-60 flex items-center justify-center gap-2"
+              style={{ background: "linear-gradient(135deg, #5400b1, #804dd3)", boxShadow: "0 4px 20px rgba(84,0,177,0.4)", minHeight: "52px" }}
             >
-              {lookingUp ? "Looking up..." : "Continue"}
+              {lookingUp ? <><Loader2 className="w-5 h-5 animate-spin" /> Looking up...</> : "Continue"}
             </button>
           </form>
-        </div>
+        </motion.div>
       </div>
     );
   }
 
-  // Step 2: Pick a slot
+  // Pick a slot
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-12">
+    <div className="min-h-screen px-4 py-12" style={{ background: "linear-gradient(170deg, #f7f5fc 0%, #e5ebf8 100%)" }}>
       <div className="max-w-lg mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Pick a Time</h1>
-          <p className="text-gray-500">Choose a 30-minute slot that works for you</p>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-8"
+        >
+          <h1 className="font-[family-name:var(--font-heading)] text-3xl font-extrabold text-text-primary mb-2">
+            Pick a Time
+          </h1>
+          <p className="text-text-muted">Choose a 30-minute slot that works for you</p>
+        </motion.div>
 
         {loading && (
-          <div className="text-center py-12 text-gray-500">Loading available times...</div>
+          <div className="text-center py-12 text-text-muted flex items-center justify-center gap-2">
+            <Loader2 className="w-5 h-5 animate-spin" /> Loading available times...
+          </div>
         )}
 
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4 text-red-700 text-sm">{error}</div>
+          <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-4 text-red-700 text-sm">{error}</div>
         )}
 
         {!loading && slots.length === 0 && (
-          <div className="bg-white rounded-xl border border-gray-200 p-8 text-center text-gray-500">
+          <div className="bg-white rounded-[20px] border border-brand-dark/6 p-8 text-center text-text-muted" style={{ boxShadow: "0 4px 24px rgba(0,0,0,0.04)" }}>
             No available slots this week. Please check back later.
           </div>
         )}
 
         {!loading && slots.length > 0 && (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {groupByDay(slots).map(([day, daySlots]) => (
-              <div key={day} className="bg-white rounded-xl border border-gray-200 p-4">
-                <h3 className="text-sm font-semibold text-gray-900 mb-3">{day}</h3>
+              <motion.div
+                key={day}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white rounded-[20px] border border-brand-dark/6 p-5"
+                style={{ boxShadow: "0 4px 24px rgba(0,0,0,0.04)" }}
+              >
+                <h3 className="text-sm font-bold text-text-primary font-[family-name:var(--font-heading)] mb-3">{day}</h3>
                 <div className="grid grid-cols-3 gap-2">
                   {daySlots.map((slot) => (
                     <button
                       key={slot.start}
                       onClick={() => handleBook(slot)}
                       disabled={booking}
-                      className="px-3 py-2 text-sm font-medium rounded-lg border border-blue-200 text-blue-700 hover:bg-blue-50 disabled:opacity-50 transition"
+                      className="px-3 py-2.5 text-sm font-semibold rounded-xl border border-brand-dark/10 text-brand-dark hover:bg-brand-dark hover:text-white hover:border-brand-dark disabled:opacity-50 transition-all duration-200"
                     >
                       {formatTime(slot.start)}
                     </button>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         )}
@@ -178,32 +204,17 @@ export default function BookingPage() {
 }
 
 function formatTime(iso: string): string {
-  return new Date(iso).toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  });
+  return new Date(iso).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
 }
 
 function formatDateTime(iso: string): string {
-  return new Date(iso).toLocaleString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  });
+  return new Date(iso).toLocaleString("en-US", { weekday: "long", month: "long", day: "numeric", hour: "numeric", minute: "2-digit", hour12: true });
 }
 
 function groupByDay(slots: TimeSlot[]): [string, TimeSlot[]][] {
   const groups: Record<string, TimeSlot[]> = {};
   for (const slot of slots) {
-    const day = new Date(slot.start).toLocaleDateString("en-US", {
-      weekday: "long",
-      month: "long",
-      day: "numeric",
-    });
+    const day = new Date(slot.start).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
     if (!groups[day]) groups[day] = [];
     groups[day].push(slot);
   }
