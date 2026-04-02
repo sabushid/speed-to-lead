@@ -35,7 +35,7 @@ export default function LandingPage() {
         <div className="absolute bottom-20 right-10 w-80 h-80 bg-brand-light/15 rounded-full blur-[100px]" />
 
         <div className="relative max-w-[1140px] mx-auto px-6 pt-32 pb-20 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
             {/* Left: Copy */}
             <motion.div
               initial={{ opacity: 0, y: 40 }}
