@@ -1,0 +1,59 @@
+Section,Item,Score / Value,Notes
+CLIENT INFO,Business Name,,
+CLIENT INFO,Website URL,,
+CLIENT INFO,Date of Audit,,
+CLIENT INFO,Auditor,,
+,,,
+WEBSITE PERFORMANCE,PageSpeed Score (Mobile),__/100,Use pagespeed.web.dev
+WEBSITE PERFORMANCE,PageSpeed Score (Desktop),__/100,Use pagespeed.web.dev
+WEBSITE PERFORMANCE,Load Time,__s,Use gtmetrix.com
+WEBSITE PERFORMANCE,Core Web Vitals,Pass / Fail,LCP + FID + CLS
+WEBSITE PERFORMANCE,Mobile Friendly,Yes / No,Google Mobile-Friendly Test
+,,,
+SEO HEALTH,Pages Indexed,__,Google Search Console
+SEO HEALTH,Critical SEO Errors,__,Screaming Frog or Ahrefs
+SEO HEALTH,Missing Meta Descriptions,__,Screaming Frog crawl
+SEO HEALTH,Broken Links,__,Screaming Frog crawl
+SEO HEALTH,Missing Alt Tags on Images,__,WAVE accessibility check
+SEO HEALTH,SSL Certificate,Yes / No,Check for https://
+,,,
+LEAD RESPONSE,Form Submitted At,__:__ AM/PM,Record exact time
+LEAD RESPONSE,First Response Received At,__:__ AM/PM,Record exact time
+LEAD RESPONSE,Total Response Time,__ min / hours,This is your killer metric
+LEAD RESPONSE,Response Channel,Email / Call / SMS / None,What did they use?
+LEAD RESPONSE,Response Quality,1-10,Was it personalized or generic?
+,,,
+SOCIAL MEDIA — INSTAGRAM,Handle,,@username
+SOCIAL MEDIA — INSTAGRAM,Followers,__,
+SOCIAL MEDIA — INSTAGRAM,Engagement Rate,__%,Use notjustanalytics.com
+SOCIAL MEDIA — INSTAGRAM,Posts Per Month,__,Count last 30 days
+SOCIAL MEDIA — INSTAGRAM,Last Post Date,,How recent?
+,,,
+SOCIAL MEDIA — FACEBOOK,Page Name,,
+SOCIAL MEDIA — FACEBOOK,Followers / Likes,__,
+SOCIAL MEDIA — FACEBOOK,Posts Per Month,__,Count last 30 days
+SOCIAL MEDIA — FACEBOOK,Review Score,__/5 (__ reviews),
+SOCIAL MEDIA — FACEBOOK,Response Time Listed,,Check the page badge
+,,,
+SOCIAL MEDIA — TIKTOK,Handle,,@username
+SOCIAL MEDIA — TIKTOK,Followers,__,
+SOCIAL MEDIA — TIKTOK,Avg Views Per Video,__,Check last 10 videos
+SOCIAL MEDIA — TIKTOK,Posts Per Month,__,
+,,,
+GOOGLE BUSINESS,Listed on Google,Yes / No,Search their business name
+GOOGLE BUSINESS,Review Score,__/5,
+GOOGLE BUSINESS,Number of Reviews,__,
+GOOGLE BUSINESS,Competitor Avg Reviews,__,Check top 3 competitors
+GOOGLE BUSINESS,Photos Uploaded,__,
+GOOGLE BUSINESS,Posts / Updates,Active / Inactive,
+,,,
+RECOMMENDATIONS,New Website,Yes / No,Score below 70 = Yes
+RECOMMENDATIONS,SEO Fixes,List here,,
+RECOMMENDATIONS,Speed-to-Lead AI,Yes,Response time above 5 min = critical
+RECOMMENDATIONS,Social Media Strategy,List here,,
+RECOMMENDATIONS,Google Reviews Campaign,Yes / No,Below 4.5 stars or < 30 reviews
+,,,
+ESTIMATED IMPACT,Response Time,From __ hours → 5 seconds,With Rushanet AI
+ESTIMATED IMPACT,Weekly Appointments,From __/week → __/week,3x improvement typical
+ESTIMATED IMPACT,Website Score,From __/100 → 95+,With new build
+ESTIMATED IMPACT,Monthly Leads Captured,From __ → __,With proper forms + SEO

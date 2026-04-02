@@ -1,0 +1,26 @@
+Category,Tool Name,What It Does,Link,Free/Paid
+Website Performance,Google PageSpeed Insights,Performance + accessibility + SEO score (mobile & desktop),https://pagespeed.web.dev,Free
+Website Performance,GTmetrix,Page load time + waterfall analysis + Core Web Vitals,https://gtmetrix.com,Free
+Website Performance,Google Lighthouse,Built into Chrome DevTools (F12 > Lighthouse) — full audit,Built into Chrome (F12),Free
+Website SEO,Google Search Console,Indexing issues + search queries + click data,https://search.google.com/search-console,Free
+Website SEO,Ahrefs Free Webmaster Tools,Backlinks + broken links + SEO health score,https://ahrefs.com/webmaster-tools,Free
+Website SEO,Ubersuggest,SEO audit + keyword rankings + competitor analysis,https://neilpatel.com/ubersuggest,Free (limited)
+Website SEO,Screaming Frog,Full site crawl — broken links + meta tags + redirects + duplicates,https://www.screamingfrog.co.uk/seo-spider,Free (up to 500 URLs)
+Website Tech,BuiltWith,See what tech stack any website uses (CMS + analytics + plugins),https://builtwith.com,Free
+Website Accessibility,WAVE,Accessibility audit — WCAG compliance checker,https://wave.webaim.org,Free
+Website Security,SecurityHeaders,Check HTTP security headers,https://securityheaders.com,Free
+Website Speed,Pingdom,Website speed test from multiple locations,https://tools.pingdom.com,Free
+Website Mobile,Google Mobile-Friendly Test,Check if a page is mobile-friendly,https://search.google.com/test/mobile-friendly,Free
+Social Media,Meta Business Suite,Facebook + Instagram analytics + post performance + audience insights,https://business.facebook.com,Free
+Social Media,Not Just Analytics,Deep Instagram audit — engagement rate + fake followers + best posting times,https://www.notjustanalytics.com,Free
+Social Media,Social Blade,Track follower growth + engagement trends for any public account,https://socialblade.com,Free
+Social Media,Phlanx Engagement Calculator,Engagement rate calculator for Instagram + YouTube + TikTok,https://phlanx.com/engagement-calculator,Free
+Social Media,SparkToro,Audience research — where your audience hangs out + what they follow,https://sparktoro.com,Free (limited)
+Social Media,Brand24,Social listening — track mentions + sentiment + reach,https://brand24.net,Paid (free trial)
+Social Media,Google Alerts,Monitor brand mentions across the web,https://www.google.com/alerts,Free
+Social Media,Hootsuite Social Audit,Social media presence score + recommendations,https://www.hootsuite.com,Free (limited)
+Google Business,Google Business Profile,Manage your Google listing + reviews + photos + posts,https://business.google.com,Free
+Google Business,Whitespark GMB Audit,Google Business Profile audit and local SEO checker,https://whitespark.ca,Free (limited)
+Competitor Analysis,SimilarWeb,Website traffic estimates + traffic sources + competitor comparison,https://www.similarweb.com,Free (limited)
+Competitor Analysis,SEMrush,Full competitor analysis — keywords + ads + backlinks,https://www.semrush.com,Paid (free trial)
+Lead Response,Rushanet Speed-to-Lead,Test any business lead response time — then show them your AI solution,https://leads.rushanet.com,Your product
