@@ -130,6 +130,35 @@ function leadToRow(lead: Lead): string[] {
 }
 
 function rowToLead(row: string[], sheetRow: number): Lead {
+  // Handle both old (13-col) and new (22-col) formats
+  const isNewFormat = row.length >= 18;
+
+  if (!isNewFormat) {
+    // Old format: ID, First, Last, Email, Phone, Source, Message, Status, Events, Appt, CalID, Created, Updated
+    return {
+      id: row[0] ?? "",
+      firstName: row[1] ?? "",
+      lastName: row[2] ?? "",
+      email: row[3] ?? "",
+      phone: row[4] ?? "",
+      source: row[5] ?? "",
+      message: row[6] || undefined,
+      language: "en",
+      status: (row[7] as LeadStatus) ?? "new",
+      score: 0,
+      qualification: { type: "unknown", intent: "unknown" },
+      pipelineEvents: safeParseJson<PipelineEvent[]>(row[8]) ?? [],
+      conversationHistory: [],
+      appointmentTime: row[9] || undefined,
+      calendarEventId: row[10] || undefined,
+      followUpCount: 0,
+      createdAt: row[11] ?? "",
+      updatedAt: row[12] ?? "",
+      sheetRow,
+    };
+  }
+
+  // New format
   return {
     id: row[0] ?? "",
     firstName: row[1] ?? "",
