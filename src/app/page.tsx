@@ -111,7 +111,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               { svg: '<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>', step: "01", title: "Lead Captured", desc: "Form submitted on your landing page or ad" },
-              { svg: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>', step: "02", title: "Instant SMS", desc: "AI sends a personalized text with booking link" },
+              { svg: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>', step: "02", title: "Instant SMS & Email", desc: "AI sends a personalized text and email with booking link" },
               { svg: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>', step: "03", title: "AI Voice Call", desc: "Automated call greets them by name" },
               { svg: '<rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/>', step: "04", title: "Appointment Booked", desc: "Lead books directly on your calendar" },
             ].map((item) => (
