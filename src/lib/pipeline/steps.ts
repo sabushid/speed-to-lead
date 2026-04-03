@@ -135,11 +135,14 @@ export async function qualifyAndScore(lead: Lead): Promise<StepResult> {
 
   await updateLead(lead.id, {
     status: lead.qualification.type !== "unknown" ? "qualified" : lead.status,
+    qualification: lead.qualification,
+    score: lead.score,
+    language: lead.language,
   });
 
   return {
     success: true,
-    detail: `Score: ${total}, Type: ${lead.qualification.type}, Intent: ${lead.qualification.intent}`,
+    detail: `Score: ${total}, Type: ${lead.qualification.type}, Area: ${lead.qualification.area ?? "unknown"}, Intent: ${lead.qualification.intent}`,
   };
 }
 

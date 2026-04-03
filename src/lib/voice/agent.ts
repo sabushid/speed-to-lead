@@ -1,9 +1,10 @@
 import { env } from "@/lib/config/env";
 import { logger } from "@/lib/utils/logger";
 import { t } from "@/lib/i18n/translations";
-import { generateConversationResponse } from "@/lib/conversation/qualifier";
+import { generateConversationResponse, extractQualification } from "@/lib/conversation/qualifier";
 import { updateLead } from "@/lib/services/google-sheets";
-import type { Lead, ConversationMessage } from "@/lib/types/lead";
+import { scoreLead } from "@/lib/scoring/lead-scorer";
+import type { Lead } from "@/lib/types/lead";
 
 /**
  * Generates TwiML for an AI-powered voice conversation.
@@ -71,22 +72,35 @@ export async function processVoiceTurn(
     timestamp: new Date().toISOString(),
   });
 
-  // Save conversation to CRM (don't await — fire and forget for speed)
+  // On last turn or every 2 turns, extract qualification
+  const isLastTurn = turnCount >= 5;
+  if (isLastTurn || turnCount % 2 === 0) {
+    try {
+      const qualification = await extractQualification(lead);
+      lead.qualification = { ...lead.qualification, ...qualification };
+      const { total } = scoreLead(lead);
+      lead.score = total;
+      log.info({ score: total, type: lead.qualification.type, intent: lead.qualification.intent }, "Qualification updated");
+    } catch (err) {
+      log.warn({ error: String(err) }, "Qualification extraction failed");
+    }
+  }
+
+  // Save conversation + qualification to CRM
   updateLead(lead.id, {
     conversationHistory: lead.conversationHistory,
+    qualification: lead.qualification,
+    score: lead.score,
     pipelineEvents: [
       ...lead.pipelineEvents,
       {
         step: `voice_turn_${turnCount}`,
         status: "success",
         timestamp: new Date().toISOString(),
-        detail: `Lead: "${speechResult.substring(0, 40)}..." → AI responded`,
+        detail: `Lead: "${speechResult.substring(0, 40)}..." → AI responded. Score: ${lead.score}`,
       },
     ],
   }).catch((err) => log.warn({ error: String(err) }, "CRM update failed during call"));
-
-  // Generate TwiML
-  const isLastTurn = turnCount >= 5;
   const voice = lang === "fr" ? "Polly.Lea" : "Polly.Joanna";
   const language = lang === "fr" ? "fr-CA" : "en-US";
 
