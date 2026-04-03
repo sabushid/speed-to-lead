@@ -12,9 +12,11 @@ const STATUS_BADGE: Record<LeadStatus, string> = {
   contacted_sms: "bg-brand-dark/10 text-brand-dark",
   contacted_voice: "bg-brand-medium/10 text-brand-medium",
   contacted_email: "bg-brand-light/30 text-brand-dark",
+  qualified: "bg-blue-100 text-blue-700",
   appointment_scheduled: "bg-green-100 text-green-700",
   appointment_completed: "bg-teal-100 text-teal-700",
   converted: "bg-emerald-100 text-emerald-800",
+  follow_up: "bg-yellow-100 text-yellow-700",
   lost: "bg-red-100 text-red-700",
 };
 
@@ -23,9 +25,11 @@ const STATUS_LABEL: Record<LeadStatus, string> = {
   contacted_sms: "SMS Sent",
   contacted_voice: "Called",
   contacted_email: "Emailed",
+  qualified: "Qualified",
   appointment_scheduled: "Appt Scheduled",
   appointment_completed: "Appt Done",
   converted: "Converted",
+  follow_up: "Follow Up",
   lost: "Lost",
 };
 

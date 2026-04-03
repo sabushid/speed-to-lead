@@ -1,59 +1,87 @@
 import { NextRequest, NextResponse } from "next/server";
-import { generateResponse } from "@/lib/ai/response-generator";
-import { sendSms } from "@/lib/services/twilio";
 import { getLeads, updateLead } from "@/lib/services/google-sheets";
-import { generateConnectTwiml } from "@/lib/services/twilio";
+import { sendSms } from "@/lib/services/twilio";
+import { generateConversationResponse, extractQualification } from "@/lib/conversation/qualifier";
+import { scoreLead } from "@/lib/scoring/lead-scorer";
+import { detectLanguage } from "@/lib/i18n/translations";
 import { logger } from "@/lib/utils/logger";
+
+export const maxDuration = 30;
 
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
     const body = Object.fromEntries(formData.entries()) as Record<string, string>;
 
-    const { searchParams } = new URL(request.url);
-    const room = searchParams.get("room");
-
-    // If this is a call connection request with a room parameter,
-    // return TwiML to connect to LiveKit
-    if (room) {
-      const twiml = generateConnectTwiml(room);
-      return new NextResponse(twiml, {
-        headers: { "Content-Type": "text/xml" },
-      });
-    }
-
     // Handle inbound SMS
     if (body.Body && body.From) {
-      logger.info({ from: body.From }, "Inbound SMS received");
+      logger.info({ from: body.From, body: body.Body }, "Inbound SMS received");
 
-      // Find the lead by phone number
       const leads = await getLeads();
       const lead = leads.find(
-        (l) => l.phone === body.From || `+1${l.phone}` === body.From
+        (l) => l.phone === body.From || `+1${l.phone}` === body.From || l.phone === body.From.replace("+1", "")
       );
 
       if (lead) {
-        // Generate an AI response to their message
-        const aiResponse = await generateResponse(
-          { ...lead, message: body.Body },
-          "sms_reply"
+        // Detect language from their reply
+        const detectedLang = detectLanguage(body.Body);
+        if (detectedLang !== lead.language) {
+          lead.language = detectedLang;
+        }
+
+        // Record inbound message
+        lead.conversationHistory.push({
+          role: "lead",
+          channel: "sms",
+          content: body.Body,
+          timestamp: new Date().toISOString(),
+        });
+
+        // Generate AI response
+        const aiResponse = await generateConversationResponse(
+          lead,
+          body.Body,
+          "sms"
         );
+
+        // Send response
         await sendSms(body.From, aiResponse);
 
-        // Update pipeline events
-        const events = [
-          ...(lead.pipelineEvents ?? []),
-          {
-            step: "inbound_sms",
-            status: "success" as const,
-            timestamp: new Date().toISOString(),
-            detail: `Received: "${body.Body}" — AI replied`,
-          },
-        ];
-        await updateLead(lead.id, { pipelineEvents: events });
+        // Record outbound
+        lead.conversationHistory.push({
+          role: "agent",
+          channel: "sms",
+          content: aiResponse,
+          timestamp: new Date().toISOString(),
+        });
+
+        // Update qualification from conversation
+        const qualification = await extractQualification(lead);
+        lead.qualification = { ...lead.qualification, ...qualification };
+
+        // Re-score
+        const { total } = scoreLead(lead);
+        lead.score = total;
+
+        // Save everything
+        await updateLead(lead.id, {
+          conversationHistory: lead.conversationHistory,
+          qualification: lead.qualification,
+          score: lead.score,
+          lastContactedAt: new Date().toISOString(),
+          language: lead.language,
+          pipelineEvents: [
+            ...lead.pipelineEvents,
+            {
+              step: "inbound_sms",
+              status: "success",
+              timestamp: new Date().toISOString(),
+              detail: `Lead: "${body.Body.substring(0, 50)}" → AI replied`,
+            },
+          ],
+        });
       }
 
-      // Twilio expects a TwiML response even for SMS
       return new NextResponse(
         '<?xml version="1.0" encoding="UTF-8"?><Response></Response>',
         { headers: { "Content-Type": "text/xml" } }
@@ -62,10 +90,7 @@ export async function POST(request: NextRequest) {
 
     // Handle call status callbacks
     if (body.CallStatus) {
-      logger.info(
-        { callSid: body.CallSid, status: body.CallStatus },
-        "Call status update"
-      );
+      logger.info({ callSid: body.CallSid, status: body.CallStatus }, "Call status update");
     }
 
     return new NextResponse(
@@ -74,6 +99,6 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     logger.error({ error: String(error) }, "Twilio webhook error");
-    return NextResponse.json({ error: "Webhook processing failed" }, { status: 500 });
+    return NextResponse.json({ error: "Webhook failed" }, { status: 500 });
   }
 }

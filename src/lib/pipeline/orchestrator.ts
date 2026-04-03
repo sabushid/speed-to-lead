@@ -1,20 +1,22 @@
 import { logger } from "@/lib/utils/logger";
-import { sleep, nowISO } from "@/lib/utils/dates";
+import { nowISO } from "@/lib/utils/dates";
 import { updateLead } from "@/lib/services/google-sheets";
 import { withRetry } from "./retry";
 import {
   sendInitialSms,
-  initiateVoiceCall,
   sendFollowUpEmail,
+  initiateVoiceCall,
+  qualifyAndScore,
   updateCrmRecord,
 } from "./steps";
 import type { Lead, PipelineEvent } from "@/lib/types/lead";
 import type { PipelineStep, PipelineResult, StepResult } from "@/lib/types/pipeline";
 
 const PIPELINE_STEPS: PipelineStep[] = [
+  { name: "qualify_and_score", execute: qualifyAndScore },
   { name: "sms_response", execute: sendInitialSms },
-  { name: "voice_call", execute: initiateVoiceCall },
   { name: "email_followup", execute: sendFollowUpEmail },
+  { name: "voice_call", execute: initiateVoiceCall },
   { name: "crm_update", execute: updateCrmRecord },
 ];
 
@@ -27,15 +29,8 @@ export async function runPipeline(lead: Lead): Promise<PipelineResult> {
   const stepResults: PipelineResult["steps"] = [];
 
   for (const step of PIPELINE_STEPS) {
-    // Apply delay if specified
-    if (step.delayMs) {
-      log.info({ step: step.name, delayMs: step.delayMs }, "Waiting before step");
-      await sleep(step.delayMs);
-    }
-
     const stepStart = Date.now();
 
-    // Record step as running
     const runningEvent: PipelineEvent = {
       step: step.name,
       status: "running",
@@ -56,7 +51,6 @@ export async function runPipeline(lead: Lead): Promise<PipelineResult> {
 
     const durationMs = Date.now() - stepStart;
 
-    // Record step result
     const completedEvent: PipelineEvent = {
       step: step.name,
       status: result.success ? "success" : "failed",
@@ -77,26 +71,15 @@ export async function runPipeline(lead: Lead): Promise<PipelineResult> {
   const totalDurationMs = Date.now() - pipelineStart;
   log.info({ totalDurationMs, steps: stepResults.length }, "Pipeline completed");
 
-  return {
-    leadId: lead.id,
-    steps: stepResults,
-    totalDurationMs,
-  };
+  return { leadId: lead.id, steps: stepResults, totalDurationMs };
 }
 
-async function safeUpdateEvents(
-  leadId: string,
-  lead: Lead,
-  event: PipelineEvent
-) {
+async function safeUpdateEvents(leadId: string, lead: Lead, event: PipelineEvent) {
   try {
     const events = [...(lead.pipelineEvents ?? []), event];
     lead.pipelineEvents = events;
     await updateLead(leadId, { pipelineEvents: events });
   } catch (error) {
-    logger.warn(
-      { leadId, error: String(error) },
-      "Failed to update pipeline events"
-    );
+    logger.warn({ leadId, error: String(error) }, "Failed to update pipeline events");
   }
 }

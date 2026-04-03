@@ -11,6 +11,7 @@ export const createLeadSchema = z.object({
     .regex(/^\+?[1-9]\d{9,14}$/, "Please enter a valid phone number"),
   source: z.string().default("landing_page"),
   message: z.string().max(1000).optional(),
+  language: z.enum(["en", "fr"]).optional(),
 });
 
 export type CreateLeadFormData = z.infer<typeof createLeadSchema>;

@@ -5,6 +5,7 @@ import { createLeadSchema } from "@/lib/validators/lead";
 import { appendLead, getLeads, initializeSheet } from "@/lib/services/google-sheets";
 import { runPipeline } from "@/lib/pipeline/orchestrator";
 import { logger } from "@/lib/utils/logger";
+import { detectLanguage } from "@/lib/i18n/translations";
 import type { Lead } from "@/lib/types/lead";
 
 export const maxDuration = 60;
@@ -23,6 +24,7 @@ export async function POST(request: NextRequest) {
 
     const data = parsed.data;
     const now = new Date().toISOString();
+    const language = data.language ?? (data.message ? detectLanguage(data.message) : "en");
 
     const lead: Lead = {
       id: uuid(),
@@ -32,20 +34,26 @@ export async function POST(request: NextRequest) {
       phone: data.phone,
       source: data.source ?? "landing_page",
       message: data.message,
+      language,
       status: "new",
+      score: 0,
+      qualification: {
+        type: "unknown",
+        intent: "unknown",
+      },
       pipelineEvents: [],
+      conversationHistory: [],
+      followUpCount: 0,
       createdAt: now,
       updatedAt: now,
     };
 
-    // Initialize sheet headers if needed, then append lead
     await initializeSheet();
     const rowNumber = await appendLead(lead);
     lead.sheetRow = rowNumber;
 
-    logger.info({ leadId: lead.id }, "New lead created");
+    logger.info({ leadId: lead.id, language }, "New lead created");
 
-    // Run pipeline after response is sent (keeps serverless function alive)
     after(async () => {
       try {
         await runPipeline(lead);
@@ -60,8 +68,7 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     const errMsg = error instanceof Error ? error.message : String(error);
-    const errStack = error instanceof Error ? error.stack : undefined;
-    console.error("Lead creation error:", errMsg, errStack);
+    console.error("Lead creation error:", errMsg);
     return NextResponse.json(
       { error: "Internal server error", detail: errMsg },
       { status: 500 }
@@ -75,9 +82,6 @@ export async function GET() {
     return NextResponse.json({ leads, total: leads.length });
   } catch (error) {
     logger.error({ error: String(error) }, "Failed to fetch leads");
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

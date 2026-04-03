@@ -28,6 +28,9 @@ export const env = {
 
   // AI
   ANTHROPIC_API_KEY: () => getEnv("ANTHROPIC_API_KEY"),
+  OPENAI_API_KEY: () => getEnv("OPENAI_API_KEY"),
+  ELEVENLABS_API_KEY: () => getEnv("ELEVENLABS_API_KEY", ""),
+  DEEPGRAM_API_KEY: () => getEnv("DEEPGRAM_API_KEY", ""),
 
   // App
   APP_URL: () => getEnv("NEXT_PUBLIC_APP_URL", "http://localhost:3000"),
