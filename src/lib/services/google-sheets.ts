@@ -25,13 +25,17 @@ export async function initializeSheet(): Promise<void> {
       spreadsheetId: sheetId,
       range: `${SHEET_NAME}!A1:V1`,
     });
-    if (!existing.data.values?.length) {
+    const currentHeaders = existing.data.values?.[0] ?? [];
+
+    // Always update headers if column count doesn't match
+    if (currentHeaders.length !== HEADERS.length) {
       await sheets.spreadsheets.values.update({
         spreadsheetId: sheetId,
         range: `${SHEET_NAME}!A1:V1`,
         valueInputOption: "RAW",
         requestBody: { values: [HEADERS] },
       });
+      logger.info({ old: currentHeaders.length, new: HEADERS.length }, "Sheet headers updated");
     }
   } catch {
     try {
