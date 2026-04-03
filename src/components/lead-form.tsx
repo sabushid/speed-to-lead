@@ -19,6 +19,7 @@ export default function LeadForm() {
       email: (form.elements.namedItem("email") as HTMLInputElement).value,
       phone: (form.elements.namedItem("phone") as HTMLInputElement).value,
       message: (form.elements.namedItem("message") as HTMLTextAreaElement).value || undefined,
+      language: (form.elements.namedItem("language") as HTMLSelectElement).value,
     };
 
     try {
@@ -120,6 +121,20 @@ export default function LeadForm() {
           className="w-full rounded-xl border border-brand-dark/10 bg-brand-offwhite px-4 py-3.5 text-text-primary placeholder-text-muted/50 focus:border-brand-medium focus:bg-white outline-none transition-all duration-200 focus:shadow-[0_0_0_3px_rgba(128,77,211,0.15)]"
           placeholder="+1 (555) 123-4567"
         />
+      </div>
+
+      <div>
+        <label htmlFor="language" className="block text-sm font-medium text-text-primary mb-1.5">
+          Preferred Language
+        </label>
+        <select
+          name="language"
+          id="language"
+          className="w-full rounded-xl border border-brand-dark/10 bg-brand-offwhite px-4 py-3.5 text-text-primary focus:border-brand-medium focus:bg-white outline-none transition-all duration-200 focus:shadow-[0_0_0_3px_rgba(128,77,211,0.15)]"
+        >
+          <option value="en">English</option>
+          <option value="fr">Fran&ccedil;ais</option>
+        </select>
       </div>
 
       <div>
