@@ -5,7 +5,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-brand-dark/95 backdrop-blur-[20px]">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-brand-dark">
         <div className="max-w-[1140px] mx-auto px-6 py-4 flex items-center justify-between">
           <Image
             src="/images/logo.png"
@@ -26,8 +26,9 @@ export default function LandingPage() {
 
       {/* Hero */}
       <section className="relative min-h-screen flex items-center overflow-hidden" style={{ background: "linear-gradient(170deg, #5400b1 0%, #3a0080 60%, #1c0050 100%)" }}>
-        <div className="absolute top-20 left-10 w-96 h-96 bg-brand-medium/20 rounded-full blur-[120px]" />
-        <div className="absolute bottom-20 right-10 w-80 h-80 bg-brand-light/15 rounded-full blur-[100px]" />
+        {/* Decorative orbs — no blur for mobile performance */}
+        <div className="absolute top-20 left-10 w-96 h-96 bg-brand-medium/10 rounded-full" />
+        <div className="absolute bottom-20 right-10 w-80 h-80 bg-brand-light/8 rounded-full" />
 
         <div className="relative max-w-[1140px] mx-auto px-6 pt-32 pb-20 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
@@ -65,7 +66,7 @@ export default function LandingPage() {
                   { svg: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>', value: "30s", label: "AI Voice Call", delay: "0.2s" },
                   { svg: '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>', value: "60s", label: "Email Follow-up", delay: "0.3s" },
                 ].map((stat) => (
-                  <div key={stat.label} className="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-sm text-center animate-fadeUp" style={{ animationDelay: stat.delay }}>
+                  <div key={stat.label} className="bg-white/5 border border-white/10 rounded-2xl p-4  text-center animate-fadeUp" style={{ animationDelay: stat.delay }}>
                     <svg className="w-5 h-5 text-brand-light mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" dangerouslySetInnerHTML={{ __html: stat.svg }} />
                     <div className="text-2xl font-extrabold text-brand-light font-[family-name:var(--font-heading)]">{stat.value}</div>
                     <div className="text-xs text-white/50 mt-1">{stat.label}</div>
@@ -156,7 +157,7 @@ export default function LandingPage() {
             ].map((stat) => (
               <div
                 key={stat.label}
-                className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-sm"
+                className="bg-white/5 border border-white/10 rounded-2xl p-6 "
               >
                 <div className="text-[2.6rem] font-extrabold text-brand-light font-[family-name:var(--font-heading)]">
                   {stat.value}

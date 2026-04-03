@@ -1,20 +1,28 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Montserrat, Roboto } from "next/font/google";
 import "./globals.css";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-montserrat",
-  weight: ["400", "700", "800"],
+  weight: ["700", "800"],
   display: "swap",
+  preload: true,
 });
 
 const roboto = Roboto({
   subsets: ["latin"],
   variable: "--font-roboto",
-  weight: ["400", "500"],
+  weight: ["400"],
   display: "swap",
+  preload: true,
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#5400b1",
+};
 
 export const metadata: Metadata = {
   title: "Speed to Lead — AI-Powered Instant Response",
