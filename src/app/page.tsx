@@ -83,10 +83,22 @@ export default function LandingPage() {
               <h3 className="font-[family-name:var(--font-heading)] text-2xl font-extrabold text-text-primary mb-2">
                 Get in touch
               </h3>
-              <p className="text-text-muted text-sm mb-6 leading-relaxed">
-                Fill out the form and we&apos;ll be in your inbox and on your
-                phone before you finish reading this.
-              </p>
+              <ul className="space-y-2 mb-6">
+                {[
+                  "Instant SMS + Email",
+                  "AI calling leads in seconds",
+                  "AI talking like a human",
+                  "Qualification happening live",
+                  "Appointments booked automatically",
+                ].map((item) => (
+                  <li key={item} className="flex items-center gap-2.5 text-sm text-text-primary">
+                    <svg className="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                    {item}
+                  </li>
+                ))}
+              </ul>
               <LeadForm />
             </div>
           </div>
